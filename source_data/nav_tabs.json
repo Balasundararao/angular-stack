@@ -1,0 +1,31 @@
+{
+  "tabs": [
+    {
+      "name": "html",
+      "links": [
+        {
+          "link-text": "Http Basics",
+          "link-short": "basics"
+        },
+        {
+          "link-text": "Html Fundamentals",
+          "link-short": "basics"
+        },
+        ,
+        {
+          "link-text": "Structure & Semantics",
+          "link-short": "basics"
+        },
+        
+      ]
+    },
+    {
+      "name": "css",
+      "links": [
+        {
+          
+        }
+      ]
+    }
+  ]
+}
