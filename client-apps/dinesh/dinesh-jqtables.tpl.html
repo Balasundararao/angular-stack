@@ -61,7 +61,7 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
 
             </div>
         </div><!-- END: Col-md-9 -->
-        <!-- <div id="tablejson"></div> -->
+        <div id="tablejson" style="display:none;"></div>
     </div><!-- Row Ends here -->
     <!-- BUTON STARTS HERE-->
     <div id="button_row" class="form_row" style="float:right;padding:7px 7px 7px 0px;">
@@ -145,6 +145,8 @@ var eobRecreateSearch = {
                 jQuery('#tablejson').text(JSON.stringify(data));
                 var responseJSON = data["eobRecreateResponse"].recreateVOList;
                 eobRecreateSearch.displayResults(responseJSON);
+                //var myobj =  JSON.parse(jQuery("#tablejson").text());
+                //eobRecreateSearch.displayResults(myobj.eobRecreateResponse.recreateVOList);
             }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -176,10 +178,9 @@ function postMethodss(){
     var reqSerArr = [];
     $("input:checked", oTable.fnGetNodes()).each(function(i){
     var tds = jQuery(this).parent().parent().children('td');
-      var oj =  "{\"ContractNumber\":" +tds.eq(2).text()+",\"mastergroupnumber\":"+tds.eq(3).text()+ "}";
-      reqSerArr.push(oj);
+      //var oj =  "{\"ContractNumber\":" +tds.eq(2).text()+",\"mastergroupnumber\":"+tds.eq(3).text()+ "}";
+      //reqSerArr.push(oj);
     });
-    console.log(reqSerArr);
 }
 function SubmitRecreateRequest(){
     var flag = true;
@@ -242,7 +243,6 @@ jQuery("#eobRecreateResultTab").DataTable({
    });
 jQuery( "input.editor-active").click(function(){
   var strlength = jQuery(this).parent().prev().prev().text().length;
-  console.log( strlength);
   if( strlength > 0 && jQuery(this).is(':checked')){
       jQuery(this).prop("checked", true);
   }else if( strlength > 0 && !jQuery(this).is(':checked'))
@@ -254,8 +254,8 @@ jQuery( "input.editor-active").click(function(){
   }
 });
 //Action need to perform when a row in results table selected.
-//jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:not(:last-child)', function () {
-jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:eq( jQuery('tr td:input'))', function () {
+jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:not(:last-child)', function () {
+//jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:eq( jQuery('tr td:input'))', function () {
 
     if ( jQuery(this).hasClass('selected') ) {
         jQuery(this).removeClass('selected');
@@ -348,7 +348,6 @@ jQuery(document).ready(function() {
     });
 });
 </script>
-
 
 
 
