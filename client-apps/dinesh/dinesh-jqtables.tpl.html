@@ -111,229 +111,282 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
 <!-- Below js is specific to this page, So included in the page.. -->
 
 <script type="text/javascript">
-// ##### Search section #####
-var eobRecreateSearch = {
-    search:function(){
-         var requestJSON = {
-            "contractNbr": jQuery('#eobRecreateContractNumber').val(),
-            "planBenefitPackage": jQuery('#eobRecreatePlanBenefitPackage').val(),
-            "masterGroupNumber": jQuery('#eobRecreateMbrNo').val(),
-            "memberMedicalId": jQuery('#eobRecreateMbrId').val(),
-            "memberMedicalIdList":["5555665","33333"],
-            "reportingPeriodEndDate": jQuery('#eobRecreateReportingPeriodEndDate').val()
-        };
+$(document).ready(function() {
+    var eobRecreateSearch = {
+        search:function(){
+             var requestJSON = {
+                "contractNbr": jQuery('#eobRecreateContractNumber').val(),
+                "planBenefitPackage": jQuery('#eobRecreatePlanBenefitPackage').val(),
+                "masterGroupNumber": jQuery('#eobRecreateMbrNo').val(),
+                "memberMedicalId": jQuery('#eobRecreateMbrId').val(),
+                "memberMedicalIdList":["5555665","33333"],
+                "reportingPeriodEndDate": jQuery('#eobRecreateReportingPeriodEndDate').val()
+            };
 
-        jQuery.blockUI.defaults.overlayCSS.backgroundColor = '#C0C0C0';
-        //jQuery('#eobRecreateResultContainer').block({ message: '<h1><img src="/etc/designs/spp-optum-design/spp-core-clientlibs/images/ajax-loader.gif" /> Loading...</h1>' });
-        jQuery.ajax({
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            //url: "/etc/designs/spp-optum-design/spp-core-clientlibs/mock-data/eob-recreate.json",
-            url:"client-apps/dinesh/eob-recreate.json",
-            cache: false,
-            dataType: "json"
-            //headers: { "Accept-Encoding" : "gzip" }
-            //data: JSON.stringify({eobRecreateVO:requestJSON})
-        })
-        .done(function(data,textStatus,jqXHR) {
-            if(jqXHR.status == 204) {
-                jQuery('#eobRecreateSearchErrorMsg').text("No records were found that match your search criteria.  Please modify your search criteria and try again.").show();
-            }    
-            else if(jqXHR.status == 200) { 
-                var subsCount = data["eobRecreateResponse"].subscriberCount;
-                jQuery('#errorMsg').hide();
-                jQuery('#tablejson').text(JSON.stringify(data));
-                var responseJSON = data["eobRecreateResponse"].recreateVOList;
-                eobRecreateSearch.displayResults(responseJSON);
-                //var myobj =  JSON.parse(jQuery("#tablejson").text());
-                //eobRecreateSearch.displayResults(myobj.eobRecreateResponse.recreateVOList);
+            jQuery.blockUI.defaults.overlayCSS.backgroundColor = '#C0C0C0';
+            //jQuery('#eobRecreateResultContainer').block({ message: '<h1><img src="/etc/designs/spp-optum-design/spp-core-clientlibs/images/ajax-loader.gif" /> Loading...</h1>' });
+            jQuery.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                //url: "/etc/designs/spp-optum-design/spp-core-clientlibs/mock-data/eob-recreate.json",
+                url:"client-apps/dinesh/eob-recreate.json",
+                cache: false,
+                dataType: "json"
+                //headers: { "Accept-Encoding" : "gzip" }
+                //data: JSON.stringify({eobRecreateVO:requestJSON})
+            })
+            .done(function(data,textStatus,jqXHR) {
+                if(jqXHR.status == 204) {
+                    jQuery('#eobRecreateSearchErrorMsg').text("No records were found that match your search criteria.  Please modify your search criteria and try again.").show();
+                }    
+                else if(jqXHR.status == 200) { 
+                    var subsCount = data["eobRecreateResponse"].subscriberCount;
+                    jQuery('#errorMsg').hide();
+                    jQuery('#tablejson').text(JSON.stringify(data));
+                    var responseJSON = data["eobRecreateResponse"].recreateVOList;
+                    eobRecreateSearch.displayResults(responseJSON);
+                    //var myobj =  JSON.parse(jQuery("#tablejson").text());
+                    //eobRecreateSearch.displayResults(myobj.eobRecreateResponse.recreateVOList);
+                }
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+            })
+            .always(function() {
+                //jQuery('#eobRecreateResultContainer').unblock();
+            });
+        },   // end: search
+        displayResults:function(data){
+            jQuery('#eobRecreateResultTab').dataTable().fnClearTable();
+            var isArray = Object.prototype.toString.call(data) === '[object Array]';
+            if(!isArray){
+                data = [data];
             }
-        })
-        .fail(function( jqXHR, textStatus, errorThrown ) {
-        })
-        .always(function() {
-            //jQuery('#eobRecreateResultContainer').unblock();
-        });
-    },   // end: search
-    displayResults:function(data){
-        jQuery('#eobRecreateResultTab').dataTable().fnClearTable();
-        var isArray = Object.prototype.toString.call(data) === '[object Array]';
-        if(!isArray){
-            data = [data];
+            jQuery('#eobRecreateDetailsContainer').show();
+            jQuery('#eobRecreateResultTab').dataTable().fnAddData(data);
         }
-        jQuery('#eobRecreateDetailsContainer').show();
-        jQuery('#eobRecreateResultTab').dataTable().fnAddData(data);
-    }
-};
-jQuery('#selectall1').change(function(){
-    if(jQuery(this).is(':checked')){
-        jQuery( ".editor-active").prop('checked', true);
-    }
-    else{
-        jQuery( ".editor-active").prop('checked', false);
-    }
-});
-function postMethodss(){
-    var oTable = jQuery('#eobRecreateResultTab').dataTable();
-    var reqSerArr = [];
-    $("input:checked", oTable.fnGetNodes()).each(function(i){
-    var tds = jQuery(this).parent().parent().children('td');
-      //var oj =  "{\"ContractNumber\":" +tds.eq(2).text()+",\"mastergroupnumber\":"+tds.eq(3).text()+ "}";
-      //reqSerArr.push(oj);
+    };
+    //Defining the EOB Results Data Table
+    $("#eobRecreateResultTab").dataTable({
+        "bJQueryUI": true,
+        "bProcessing": true,
+        "bSortable": false,
+        "scrollX": true,
+        "scrollY": "300px",
+        "bAutoWidth": false,
+        "bPaginate": false,
+        "bFilter": false,
+        "bDestroy": true,
+        "bInfo": false,
+        "aoColumns": [
+            {"mData": "contractNbr",className: "dt-body-center"}, 
+            {"mData": "planBenefitPackage",className: "dt-body-center"}, 
+            {"mData": "masterGroupNumber",className: "dt-body-center"}, 
+            {"mData": "memberMedicalId",className: "dt-body-center"}, 
+            {"mData": "reportingPeriodEndDate",className: "dt-body-center"},
+            {"mData": null,
+                "render": function(
+                    data, type,
+                    row, meta) {
+                    if (type === 'display') {
+                        return '<input type="checkbox" class="editor-active">';
+                    }
+                    return "";
+                },
+                className: "dt-body-center",
+                "targets": 0,
+                "orderable": false
+            },
+            {"mData": "sbscrReleaseId","visible": true}, 
+            {"mData": "memberMedicalSourceSystem","visible": true}
+        ],
+        rowCallback: function(row, data) {
+            // Set the checked state of the checkbox in the table
+            $('input.editor-active', row).prop('disabled',
+            data.memberMedicalId !== "" && data.contractNbr == "" && data.planBenefitPackage == "" && data.masterGroupNumber == "" && data.reportingPeriodEndDate == "");
+        }
     });
-}
-function SubmitRecreateRequest(){
+
+    //check box result
+    jQuery('#selectall1').change(function() {
+        if (jQuery(this).is(':checked')) {
+            $('#eobRecreateResultTab').find('tr').each(function() {
+                var row = $(this);
+                if (!row.find('input[type="checkbox"]').is(':disabled')) {
+                    row.find('input[type="checkbox"]').prop('checked',true);
+                } else {
+                    row.find('input[type="checkbox"]').prop('checked',false);
+                }
+            });
+        } else {
+            jQuery(".editor-active").prop('checked', false);
+        }
+    });
+
+    //Action need to perform when a row in results table selected.
+    jQuery('#eobRecreateResultTab tbody').on('click','tr td:not(:last-child)',function() {
+        if (jQuery(this).hasClass('selected')) {
+            jQuery(this).removeClass('selected');
+        } else {
+            jQuery('tr.selected').removeClass('selected');
+            jQuery(this).addClass('selected');
+            jQuery('#eobRecreateDetailsContainer').slideDown("slow");
+            var tr = jQuery(this).closest('tr');
+            var selRow = $('#eobRecreateResultTab').DataTable().row(tr).data();
+            eobRecreateDetails.renderResults(selRow);
+        }
+    });
+});  // DOCUMENT.READY ENDS HERE..
+
+//alert-check box SubmitRecreateRequest Button 
+function SubmitRecreateRequest() {
     var flag = true;
-    if (  (jQuery("input.editor-active:checked").length == false ) ||  (jQuery("input.editor-active:checked").length < 1 ) )
-    {
+    if ((jQuery("input.editor-active:checked").length == false) || (jQuery("input.editor-active:checked").length < 1)) {
         flag = false;
-        alert("Please Select the checkbox" + "  "+ jQuery("input.editor-active:checked").length);
+        $("#alert-check-Recreate-EOB").dialog({buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+        });
         return false;
     }
-    if( flag ){
-        if(confirm("Do you want to submit the form ???")){
-            // submitting info goes here.     
-        }
+    if (flag) {
+        $("#dialog").dialog("open");
     }
 }
 
-
-//Defining the EOB Results Data Table
-jQuery("#eobRecreateResultTab").DataTable({
-//"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
-    "bJQueryUI" : true,
-    "bProcessing" : true,
-    "bSort": true,
-    "scrollX": true,
-    "scrollY": "200px",
-    "bAutoWidth": true,
-    "bPaginate" : false,
-    "bFilter": false,
-    "bDestroy": true,
-    "bInfo": false,
-    "aoColumns": [
-        {"mData":"subscriberName",
-        "mRender":function(data, type, full){
-            return full.contractNbr + "," + full.memberMedicalId ;
-        }
+//dialog RecreateReason  select Options POPUP
+$(document).ready(function() {
+    $("#dialog").dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 10
         },
-        { "mData": "contractNbr" },
-        { "mData": "planBenefitPackage" },
-        { "mData": "masterGroupNumber" },
-        { "mData": "memberMedicalId"},
-        { "mData": "reportingPeriodEndDate"},
-        { "mData": null,
-        "render": function ( data, type, row, meta ) {
-            if ( type === 'display' ) {
-                return '<input type="checkbox" class="editor-active">';
+        hide: {
+            effect: "explode",
+            duration: 10
+        },
+        width: "40%"
+    });
+    var now = new Date();
+    var first_day = new Date(now.getFullYear(), now.getMonth(), 1);
+    var last_day = new Date(now.getFullYear(), now.getMonth(), 0);
+    var lastDate = first_day.getMonth() + '/' + last_day.getDate() + '/' + last_day.getFullYear();
+    $('#eobRecreateReportingPeriodEndDate').val(lastDate);
+
+    $("#eobRecreateSearchBtn").click(function() {
+        $('#eobRecreateDetailsContainer').slideUp("slow");
+        eobRecreateSearch.search();
+    });
+});  // END :ANOTHER DOCUMENT.READY???
+
+//"SubmitRecreateRequest Button "
+function SubmitRecreateRequest() {
+    var flag = true;
+    if ((jQuery("input.editor-active:checked").length == false) || (jQuery("input.editor-active:checked").length < 1)) {
+        flag = false;
+        $("#alert-check-Recreate-EOB").dialog({
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
             }
-                return "";
-            },
-            className:"dt-body-center",
-            "targets": 0, "orderable": false 
-        }
-        ] ,//,
-        rowCallback: function ( row, data ) {
-            // Set the checked state of the checkbox in the table
-            $('input.editor-active', row).prop( 'disabled', data.masterGroupNumber=="" );
-        },
-        "fnServerParams": function (aoData) {     
-            aoData.push({ "name": "cbox", "value": true});     
-        }    
-   });
-jQuery( "input.editor-active").click(function(){
-  var strlength = jQuery(this).parent().prev().prev().text().length;
-  if( strlength > 0 && jQuery(this).is(':checked')){
-      jQuery(this).prop("checked", true);
-  }else if( strlength > 0 && !jQuery(this).is(':checked'))
-  {
-     jQuery(this).prop("checked", false);
-
-  }else{
-    jQuery(this).prop("checked", false);
-  }
-});
-//Action need to perform when a row in results table selected.
-jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:not(:last-child)', function () {
-//jQuery('#eobRecreateResultTab tbody').on( 'click', 'tr td:eq( jQuery('tr td:input'))', function () {
-
-    if ( jQuery(this).hasClass('selected') ) {
-        jQuery(this).removeClass('selected');
+        });
+        return false;
     }
-    else {
-        jQuery('tr.selected').removeClass('selected');
-        jQuery(this).addClass('selected');
-        jQuery('#eobRecreateDetailsContainer').slideDown("slow");
-        var tr = jQuery(this).closest('tr');
-        var selRow = $('#eobRecreateResultTab').DataTable().row( tr ).data();
-        eobRecreateDetails.renderResults(selRow);
+    if (flag) {
+        $("#dialog").dialog("open");
     }
-});
+}
 
-
-// ##### Details Section #####
-var eobRecreateDetails = {
-    renderResults:function(data){
-        jQuery('#eobRecreateDetailsTab').dataTable().fnClearTable();
-        var isArray = Object.prototype.toString.call(data) === '[object Array]';
-        if(!isArray){
-            data = [data];
-        }
-        jQuery('#eobRecreateDetailsTab').dataTable().fnAddData(data);
+///"PostRecreateReason in the dropdown"
+function PostRecreateReason(argument) {
+    var flag = true;
+    if ((jQuery("#DropdownRecreateReasons").val() == "")) {
+        flag = false;
+        $("#alert-Select-Recreate-Reason").dialog({
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        return false;
     }
-    // ,displayResults:function(){
-    //     jQuery.ajax({
-    //         type: "GET",
-    //         contentType: "application/json; charset=utf-8",
-    //         //url: "/spp-hapi/service/eob-recreate/getdetails/v1",
-    //         url: "client-apps/dinesh/eob-recreate.json",
-    //         cache: false,
-    //         dataType: "json",
-    //         //headers: { "Accept-Encoding" : "gzip" },
-    //         data: JSON.stringify()
-    //     })
-    //     .done(function(data,textStatus,jqXHR) {
-    //         if(jqXHR.status == 200) {
-    //             var responseDetailsJSON = data["eobRecreateResponse"].recreateVOList;
-    //             eobRecreateDetails.renderResults(responseDetailsJSON);
-    //         }
-    //     })
-    //     .fail(function( jqXHR, textStatus, errorThrown ) {
-    //     });    
-    // }
-};
-jQuery('#eobRecreateDetailsContainer').slideUp("slow");
-jQuery("#eobRecreateDetailsTab").dataTable({
-    "bJQueryUI" : true,
-    "bProcessing" : true,
-    "bSort": true,
-    "scrollX": true,
-    "scrollY": "200px",
-    "bAutoWidth": true,
-    "bPaginate" : false,
-    "bFilter": false,
-    "bDestroy": true,
-    "bInfo": false,
-    "aoColumns": [
-        { "mData": "sbscrReleaseId" },
-        { "mData": "subscriberName" },
-        { "mData": "memberMedicalId" },
-        { "mData": "memberMedicalSourceSystem"},
-        { "mData": "masterGroupNumber"},
-        { "mData": "groupNumber"},
-        { "mData": "divisionSite"},
-        { "mData": "contractNbr"},
-        { "mData": "planBenefitPackage"},
-        { "mData": "planContractYear"},
-        { "mData": "reportingPeriodEndDate"},
-        { "mData": "EOBReleaseDate"},
-        { "mData": "EligibilitySource"},
-        { "mData": "SubscriberDOB"},
-        { "mData": "claimIndicator"},
-        { "mData": "recreateIndicator"},
-        { "mData": "subscriberHolds"}
-        ]
-});
+    if (flag) {
+        $("#dialog-confirm").dialog({title: "Request Recreate Submit",
+            resizable: false,
+            height: 160,
+            modal: true,
+            buttons:{
+            "YES": function() {
+                $(this).dialog("close");
+                $('#dialog').dialog("close");
+                var oTable = jQuery('#eobRecreateResultTab').dataTable();
+                var reqSerArr = [];
+                $("input:checked", oTable.fnGetNodes()).each(function(i) {
+                    var tds = jQuery(this).parent().parent().children('td');
+                    //var oj = "{\"sbscrReleaseId\":" + tds.eq(6).text() + ",\"memberMedicalId\":" + tds.eq(3).text() + ",\"medicalSourceSystem\":" + tds.eq(7).text() + "}";
+                    var oj = {"subscriberReleaseId": tds.eq(6).text(),
+                        "memberMedicalId": tds.eq(3).text(),
+                        "medicalSourceSystem": tds.eq(7).text()
+                    };
+                    reqSerArr.push(oj);
+                });
+                var recrequest = {
+                    "eobRecreateRequest": {
+                    "recreateReason": jQuery("#DropdownRecreateReasons").val(),
+                    "userFirstName": firstName,
+                    "userLastName": lastName,
+                    "recreateEOBRequest": reqSerArr
+                    }
+                };
+                //ajaxRequest,ajaxRequest.done,ajaxRequest.done function...
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/spp-hapi/service/eob-recreate/submit-request/v1",
+                    cache: false,
+                    dataType: "json",
+                    headers: {
+                        "Accept-Encoding": "gzip"
+                    },
+                    data: JSON.stringify(recrequest)
+                });
+
+                ajaxRequest.done(function(msg) {
+                    $("#PostMessageConformationSucess").dialog({
+                        title: "Success",
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    $("#PostMessageConformationSucess").html("Recreate Request Batch " + msg.eobSubmitRecreateResponse.recreateRequestId + " Successfully Submitted in PENDING Status");
+                });
+
+                ajaxRequest.fail(function(jqXHR,textStatus) {
+                    $("#PostMessageConformationSucess").dialog({
+                        title: "Failed",
+                        buttons: {
+                            Ok: function() {
+                            $(this).dialog("close");
+                            }
+                        }
+                    });
+                    var res = jQuery.parseJSON(jqXHR.responseText);
+                    $("#PostMessageConformationSucess").html(res['error-messages'].message.desc);
+                });
+
+                },
+            "NO": function() {$(this).dialog("close");}
+            }  // end buttons
+        });
+        $("#dialog-confirm").html("Are you sure you want to continue? If you continue, your changes will not be able to be undone");
+    }
+}  // END: PostRecreateReason
 // ##### TRIGGER CLICK #####
 jQuery(document).ready(function() {    
     var now = new Date();
