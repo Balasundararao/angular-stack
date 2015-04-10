@@ -51,8 +51,7 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
 
             <!-- Start Select Recreate Reason dialog-confirm  -->
 
-            <div id="dialog-confirm" title="Select Recreate Reason"
-                style="display: none"></div>
+            <div id="dialog-confirm" title="Select Recreate Reason" style="display: none;"></div>
 
             <!-- END Select Recreate Reason dialog-confirm  -->
 
@@ -274,8 +273,11 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
         ],
         rowCallback: function(row, data) {
             // Set the checked state of the checkbox in the table
-            $('input.editor-active', row).prop('disabled',
-            data.memberMedicalId !== "" && data.contractNbr == "" && data.planBenefitPackage == "" && data.masterGroupNumber == "" && data.reportingPeriodEndDate == "");
+            //$('input.editor-active', row).prop('disabled',
+            //data.memberMedicalId !== "" && data.contractNbr == "" && data.planBenefitPackage == "" && data.masterGroupNumber == "" && data.reportingPeriodEndDate == "");
+            if(  data.masterGroupNumber == 22  ){
+               $('input.editor-active', row).attr("disabled","disabled"); 
+            }
         }
     });
 
@@ -296,7 +298,7 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
     });
 
     //Action need to perform when a row in results table selected.
-    jQuery('#eobRecreateResultTab tbody').on('click','tr td:not(:last-child)',function() {
+    jQuery('#eobRecreateResultTab tbody').on('click','tr td:not(:nth-of-type(6))',function() {
         if (jQuery(this).hasClass('selected')) {
             jQuery(this).removeClass('selected');
         } else {
@@ -458,6 +460,16 @@ function PostRecreateReason(argument) {
     }
 }  // END: PostRecreateReason
 
+var eobRecreateDetails = {
+    renderResults:function(data){
+        jQuery('#eobRecreateDetailsTab').dataTable().fnClearTable();
+        var isArray = Object.prototype.toString.call(data) === '[object Array]';
+        if(!isArray){
+            data = [data];
+        }
+        jQuery('#eobRecreateDetailsTab').dataTable().fnAddData(data);
+    }
+};   
 
 // ##### TRIGGER CLICK #####
 jQuery(document).ready(function() {    
