@@ -41,19 +41,37 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
             </div> <!-- END: Panel --> 
         </div><!-- col-md-3 -->
         <div class="col-md-9">
+        <!-- Start Select Recreate Reason Dialog  -->
+
+            <div id="alert-Select-Recreate-Reason" title="Select Recreate Reason"
+                style="display: none">
+                <p>No Re-Create Reason Selected. Please modify and try again.</p>
+            </div>
+            <!-- END Select Recreate Reason Dialog   -->
+
+            <!-- Start Select Recreate Reason dialog-confirm  -->
+
+            <div id="dialog-confirm" title="Select Recreate Reason"
+                style="display: none"></div>
+
+            <!-- END Select Recreate Reason dialog-confirm  -->
+
+            <!----Conform-----after Submittion-->
+            <div id="PostMessageConformationSucess"></div>
+            <!----EndConform-----after Submittion-->
+
             <div id ="eobRecreateDetailsContainer" class="table-responsive" style="display:block;">
             
             <table id ="eobRecreateResultTab" class="table table-hover display">
             <caption>Hover Table Layout</caption>    
             <thead>
                 <tr>
-                    <td>Test</td>    
                     <td>Contract Number</td>
                     <td>Plan Benefit Package</td>
                     <td>Master Group Number</td>
                     <td>Medical Member ID #</td>
                     <td>Reporting Period End Date</td>
-                    <td>Select / Unselect<input type="checkbox" name="cbox" id="selectall1"/></td>
+                    <td colspan="3">Select / Unselect<input type="checkbox" name="cbox" id="selectall1"/></td>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -69,6 +87,62 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
         <input type="button"  value="Check Me" onclick="postMethodss()"/>
         <input class="form_button_submit ui-button ui-widget ui-state-default ui-corner-all" type="button" id="addNewButton" value="Submit Re-Create Request" onclick="SubmitRecreateRequest()" />
     </div>
+    </div>
+    <!-- Alert Box SubmitRecreateRequest  -->
+    <div id="alert-check-Recreate-EOB" title="Recreate EOB"
+        style="display: none">
+        <p>You did not select Subscribers to recreate. Please select and
+            try again.</p>
+    </div>
+
+
+    <!-- start RecreateReason  select Options POPUP ------------------- -->
+    <div id="dialog" title="Submit EOB Request">
+        <form method="GET" action="" id="RecreateReason" name="RecreateReason">
+            <input type="hidden" name="SelectedValues" id="SelectedValues" />
+            <div class="form_row">
+                <div class="form_leftcol">
+                    <div class="form_leftcollabel">
+                        <label for="provider_type"> Recreate Reason </label>
+                    </div>
+                </div>
+                <div class="form_rightcol_new">
+                    <div id="providerType_0_wrapper" class="form_rightcol_wrapper">
+                        <select id="DropdownRecreateReasons">
+                            <option value="">Select Reason</option>
+                            <option value="Branding Data Error">Branding Data Error</option>
+                            <option value="CH Traditional Accumulator Data Error">CH
+                                Traditional Accumulator Data Error</option>
+                            <option value="COSMOS Eligibility Data Error">COSMOS
+                                Eligibility Data Error</option>
+                            <option value="GPS Eligibility Data Error">GPS
+                                Eligibility Data Error</option>
+                            <option value="MAPS Group Plan Data Error">MAPS Group
+                                Plan Data Error</option>
+                            <option value="Messaging Data Error">Messaging Data Error
+                            </option>
+                            <option value="NDB Provider Name Data Error">NDB Provider
+                                Name Data Error</option>
+
+                            <option value="Remark Code Error">Remark Code Error</option>
+                            <option value="Reporting Accumulator Error">Reporting
+                                Accumulator Error</option>
+                            <option value=" Service Code Error">Service Code Error</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="button_row" class="form_row">
+                <div class="text-center">
+                    <input
+                        class="form_button_submit ui-button ui-widget ui-state-default ui-corner-all  center-block text-center"
+                        type="button" id="Submit-Eob-Request" value="Submit Eob Request"
+                        onclick="PostRecreateReason()" />
+                </div>
+            </div>
+        </form>
+
     </div>
 
     <!-- BUTTONS ENDS.. -->
@@ -254,18 +328,18 @@ function SubmitRecreateRequest() {
 }
 
 //dialog RecreateReason  select Options POPUP
-    // $("#dialog").dialog({
-    //     autoOpen: false,
-    //     show: {
-    //         effect: "blind",
-    //         duration: 10
-    //     },
-    //     hide: {
-    //         effect: "explode",
-    //         duration: 10
-    //     },
-    //     width: "40%"
-    //});
+    $("#dialog").dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 10
+        },
+        hide: {
+            effect: "explode",
+            duration: 10
+        },
+        width: "40%"
+    });
     var now = new Date();
     var first_day = new Date(now.getFullYear(), now.getMonth(), 1);
     var last_day = new Date(now.getFullYear(), now.getMonth(), 0);
@@ -333,8 +407,8 @@ function PostRecreateReason(argument) {
                 var recrequest = {
                     "eobRecreateRequest": {
                     "recreateReason": jQuery("#DropdownRecreateReasons").val(),
-                    "userFirstName": firstName,
-                    "userLastName": lastName,
+                    "userFirstName":  "abc",   //firstName,
+                    "userLastName":  "def",    //lastName,
                     "recreateEOBRequest": reqSerArr
                     }
                 };
