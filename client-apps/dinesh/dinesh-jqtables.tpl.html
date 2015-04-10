@@ -111,7 +111,6 @@ https://datatables.net/forums/discussion/6682/getting-the-checked-check-box-row-
 <!-- Below js is specific to this page, So included in the page.. -->
 
 <script type="text/javascript">
-$(document).ready(function() {
     var eobRecreateSearch = {
         search:function(){
              var requestJSON = {
@@ -235,7 +234,6 @@ $(document).ready(function() {
             eobRecreateDetails.renderResults(selRow);
         }
     });
-});  // DOCUMENT.READY ENDS HERE..
 
 //alert-check box SubmitRecreateRequest Button 
 function SubmitRecreateRequest() {
@@ -256,19 +254,18 @@ function SubmitRecreateRequest() {
 }
 
 //dialog RecreateReason  select Options POPUP
-$(document).ready(function() {
-    $("#dialog").dialog({
-        autoOpen: false,
-        show: {
-            effect: "blind",
-            duration: 10
-        },
-        hide: {
-            effect: "explode",
-            duration: 10
-        },
-        width: "40%"
-    });
+    // $("#dialog").dialog({
+    //     autoOpen: false,
+    //     show: {
+    //         effect: "blind",
+    //         duration: 10
+    //     },
+    //     hide: {
+    //         effect: "explode",
+    //         duration: 10
+    //     },
+    //     width: "40%"
+    //});
     var now = new Date();
     var first_day = new Date(now.getFullYear(), now.getMonth(), 1);
     var last_day = new Date(now.getFullYear(), now.getMonth(), 0);
@@ -279,7 +276,6 @@ $(document).ready(function() {
         $('#eobRecreateDetailsContainer').slideUp("slow");
         eobRecreateSearch.search();
     });
-});  // END :ANOTHER DOCUMENT.READY???
 
 //"SubmitRecreateRequest Button "
 function SubmitRecreateRequest() {
@@ -387,6 +383,8 @@ function PostRecreateReason(argument) {
         $("#dialog-confirm").html("Are you sure you want to continue? If you continue, your changes will not be able to be undone");
     }
 }  // END: PostRecreateReason
+
+
 // ##### TRIGGER CLICK #####
 jQuery(document).ready(function() {    
     var now = new Date();
