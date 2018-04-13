@@ -1,0 +1,33 @@
+var data = {
+  "eobRecreateMgmntDetailsResponse": {
+    "recreateMgmntVO": {
+      "creationDt": "03\/16\/2015",
+      "lastUpdatedByFstNm": "uday",
+      "lastUpdatedByLstNm": "kondeti",
+      "lastUpdateDt": "03\/16\/2015",
+      "batchNumber": "951",
+      "recreateReason": "test",
+      "recreateStatus": "Pending",
+      "subscriberDetailsList": [
+        {
+          "memberMedicalNumber": "5555",
+          "creationDt": "03\/16\/2015",
+          "lastUpdateDt": "03\/16\/2015",
+          "medicalSourceSystem": "1001",
+          "batchNumber": "951",
+          "subscriberReleaseId": "912341",
+          "isSubscriberOnHold": "true"
+        },
+        {
+          "memberMedicalNumber": "5555",
+          "creationDt": "03\/16\/2015",
+          "lastUpdateDt": "03\/16\/2015",
+          "medicalSourceSystem": "1001",
+          "batchNumber": "951",
+          "subscriberReleaseId": "912342",
+          "isSubscriberOnHold": "false"
+        }
+      ]
+    }
+  }
+};
